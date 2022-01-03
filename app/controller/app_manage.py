@@ -17,6 +17,19 @@ from app.model.user import user
 from app.model.token import token
 
 ################################# 網頁功能 #############################################
+import datetime
+
+app.jinja_env.globals['nowts'] = datetime.datetime.now()   #設定jinja2 時間模板
+
+
+@app.context_processor 
+def inject_template_globals(): 
+    return { 
+     'nowts': datetime.datetime.utcnow(), 
+    } 
+
+#http://cn.voidcc.com/question/p-mshbrtlo-bbz.html
+
 
 
 
@@ -124,6 +137,7 @@ def token1():
 def index():
     db.session.commit()
     return render_template("index.html")
+    
 
 @app.route("/page")
 @login_required
