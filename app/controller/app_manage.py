@@ -17,19 +17,20 @@ from app.model.user import user
 from app.model.token import token
 
 ################################# 網頁功能 #############################################
+
 import datetime
 
 app.jinja_env.globals['nowts'] = datetime.datetime.now()   #設定jinja2 時間模板
 
-
+# UTC時間自動更新
 @app.context_processor 
 def inject_template_globals(): 
     return { 
      'nowts': datetime.datetime.utcnow(), 
     } 
 
-#http://cn.voidcc.com/question/p-mshbrtlo-bbz.html
 
+# 前端放入 {{ nowts.strftime('%Y') }}
 
 
 
