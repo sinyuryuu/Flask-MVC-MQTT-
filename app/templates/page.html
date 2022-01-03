@@ -1,0 +1,53 @@
+<!-- 宣告我們要套用模板 -->
+{% extends "base.html" %}
+
+{% block title %}數學計算{% endblock %}
+
+{% block main %}
+
+<br/>
+<h1>數字測試</h1>
+<br/>
+<form action="/keisan">
+    <div class="mb-3">
+      <label for="max" class="form-label">最大值</label>
+      <input type="text" class="form-control" id="max"  name= "maxn">
+    </div>
+    <div class="mb-3">
+      <label for="min" class="form-label">最小值</label>
+      <input type="text" class="form-control" id="min" name= "minn">
+    </div>
+    <button class="btn btn-primary" id="submit_btn" onclick="bootalert()">送出</button> 
+    <button type="button" class="btn btn-primary" id="liveAlertBtn">顯示答案</button>
+  </form>
+  <br/>
+  <div id="liveAlertPlaceholder"></div>
+
+
+
+
+{% endblock %}
+
+
+{% block script %}
+
+<script>
+alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+alertTrigger = document.getElementById('liveAlertBtn')
+
+function alert(message, type) {
+  wrapper = document.createElement('div')
+  wrapper.innerHTML = '<div class="alert alert-' + type + ' alert-dismissible" role="alert">' + message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
+
+  alertPlaceholder.append(wrapper)
+}
+
+if (alertTrigger) {
+  alertTrigger.addEventListener('click', 
+  function () {
+    alert('答案是 {{suzi}}', 'success')
+  })
+}
+
+</script> 
+{% endblock %}

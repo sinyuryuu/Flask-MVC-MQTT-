@@ -1,0 +1,76 @@
+<!-- 宣告我們要套用模板 -->
+{% extends "base.html" %}
+
+{% block title %}Arduino 測試{% endblock %}
+
+{% block main %}
+
+<br/>
+<h1>Arduino 測試</h1>
+<br/>
+<form action="/arduino">
+  <!-- <button type="button" class="btn btn-primary" onclick="location.href='http://188.166.206.43/SpSvKBcungOIKDviW76LsYXL_pqkb_a2/update/V2?value='"  >開始</button> -->
+  <button type="button" class="btn btn-primary" value='http://188.166.206.43/SpSvKBcungOIKDviW76LsYXL_pqkb_a2/update/V2?value='  >開始</button>
+  <button type="button" class="btn btn-primary" onclick="location.href='http://188.166.206.43/SpSvKBcungOIKDviW76LsYXL_pqkb_a2/update/V3?value='"  >停止</button>
+  </form>
+  <br/>
+  <form action="/mqtt">
+    <button class="btn btn-primary" id="submit_btn">mqtt 測試</button> 
+    <label for="mqttsuzi" class="form-label">{{doorstatus}}</label>
+    </form>
+<br/>
+  <form action="/ledon" method="post">
+      <button type="submit" class="btn btn-primary" type="button">mqtt開</button>
+  </form>
+<br/>
+  <form action="/ledoff" method="post">
+    <button type="submit" class="btn btn-primary" type="button">mqtt關</button>
+  </form>
+
+<br/>
+<h1>目前狀態</h1>
+<br/>
+<h3 id ="subscribe_messages" class="panel-title">尚未接收到數值</h3>
+
+
+{% endblock %}
+
+
+{% block script %}
+
+
+
+<!-- Socket.IO 的 CDN 連結 一定要加integrity=....略 不然不能用-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!-- Socket.IO 的 CDN 連結 一定要加integrity=....略 不然不能用-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"
+integrity="sha512-WL6WGKMPBiM9PnHRYIn5YEtq0Z8XP4fkVb4qy7PP4vhmYQErJ/dySyXuFIMDf1eEYCXCrQrMJfkNwKc9gsjTjA=="
+crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function() {
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+    // listen for mqtt_message events
+    // when a new message is received, log and append the data to the page
+    socket.on('mqtt_message', function(data) {
+      console.log(data);
+      var text = '(' + data['topic'] + ' qos: ' + data['qos'] + ') ' + data['payload'];
+      //TEXT可自訂變數
+      $('#subscribe_messages').text(text);
+      //$('#subscribe_messages').append(text + '<br><br>');
+      //.append 會一直增加 <h3> </h3>
+
+    })
+  });
+
+
+</script>
+
+
+
+{% endblock %}

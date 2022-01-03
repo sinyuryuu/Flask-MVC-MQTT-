@@ -1,0 +1,91 @@
+<!-- 宣告我們要套用模板 -->
+{% extends "base.html" %}
+
+{% block title %}Line Notify 測試{% endblock %}
+
+
+{% block main %}
+<h2>Line Notify 測試</h2>      
+<br/>
+<h4>Token: {{token}}</h4>
+<br/>
+
+<!-- jinja2 也可以寫迴圈區值 -->
+
+{% for alltoken in alltoken %}
+
+    {{alltoken.id}}, {{alltoken.linetoken}}<br>
+
+{% endfor %}
+
+
+
+<br/>
+<h4>送純文字 or 貼圖</h4>
+<span>請輸入文字: </span>
+<input type="text" name="user_text" id="user_text" />
+<button id="submit_btn" class="btn btn-dark">發送文字</button>
+<button id="submit_sticker" class="btn btn-dark">送貼圖</button>
+<form action="/token1">
+    <br/>
+    <button class="btn btn-dark">讀取token</button>
+</form>
+<br/>
+<button class="btn btn-dark" onclick="window.location.href = '{{auth_url}}';">連結到LineNotify</button>
+</div>
+
+
+{% endblock %}
+
+
+{% block script %}
+
+
+<!-- https://developer.mozilla.org/zh-TW/docs/Web/API/Fetch_API/Using_Fetch -->
+
+<script>
+    submit = document.getElementById('submit_btn');
+    submit.addEventListener('click', () => {
+      const userText = document.getElementById('user_text').value;
+      fetch('/notify/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userText, token: '{{token}}' }),
+      }).then(response =>
+       {
+
+        Swal.fire(
+            '訊息',
+            '傳送成功!',
+            'success'
+        );
+
+        
+      });
+    });
+
+    submit_sticker = document.getElementById('submit_sticker');
+    submit_sticker.addEventListener('click', () => {
+      const userText = document.getElementById('user_text').value;
+      fetch('/notify/send/sticker', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userText, token: '{{token}}' }),
+      }).then(response => 
+      
+      {
+
+        Swal.fire(
+            '訊息',
+         '貼圖傳送成功!',
+            'success'
+        );
+
+
+
+      });
+    });
+</script>
+
+
+{% endblock %}

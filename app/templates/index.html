@@ -1,0 +1,29 @@
+<!-- 宣告我們要套用模板 -->
+{% extends "base.html" %}
+
+{% block title %}門禁系統{% endblock %}
+
+
+{% block main %}
+
+      
+<br/> 
+<h3>你好！{{name}}</h3>
+
+<br/>
+<h3>歡迎來到首頁</h3>
+
+<br/>
+<form action="/show">
+    姓名 <input type="text" name = "n" />
+    <button class="btn btn-dark">點擊送出表單</button>
+</form>
+
+<br/>
+<img src="/1.png"/>
+
+
+</div>
+
+
+{% endblock %}
