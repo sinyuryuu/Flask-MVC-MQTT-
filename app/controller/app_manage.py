@@ -4,7 +4,7 @@
 import json
 import uuid
 import os
-from flask import Flask, render_template ,request
+from flask import Flask, render_template ,request,url_for,redirect
 import requests
 
 #app 導入後才能import (從__int__匯入app)
@@ -22,6 +22,7 @@ app.secret_key = 'dd06be55a06c03312b2ab109b5f8f6ab'
 ################################# 網頁功能 #############################################
 
 import datetime
+import time
 
 app.jinja_env.globals['nowts'] = datetime.datetime.now()   #設定jinja2 時間模板
 
@@ -75,29 +76,27 @@ def mqttz():
 
    
     
-@app.route("/ledon", methods=['GET', 'POST'])
+@app.route("/ledon", methods=['POST'])
 def ledon():        
     mqtt.publish('esp/son', 'on') 
     token = 'ctupVqalWzuKbaw72AWqKcl2tKXftiT5YhGiBR0v0jL'
     now = datetime.datetime.now() 
     #轉換為指定的格式:
     otherStyleTime = now.strftime("%Y-%m-%d %H:%M:%S")
-    message = '時間：'+otherStyleTime+' 使用者：'+getnowuser()+'開門！！！'
-    lineNotifyMessage(token, message)
+    
+    if 'dooropen' in request.form:
+        message = '時間：'+otherStyleTime+' 使用者：'+getnowuser()+'開門！！！'
+        lineNotifyMessage(token, message)
+        time.sleep(1.5)
+        
+        
+    elif 'doorclose' in request.form:
+        message = '時間：'+otherStyleTime+' 使用者：'+getnowuser()+'閉門！！！'
+        lineNotifyMessage(token, message)
+        time.sleep(1.5)
+         
+
     return render_template("arduino.html")
-
-
-@app.route("/ledoff", methods=['GET', 'POST'])
-def ledoff():        
-    mqtt.publish('esp/son', 'soff') 
-    token = 'ctupVqalWzuKbaw72AWqKcl2tKXftiT5YhGiBR0v0jL'
-    now = datetime.datetime.now() 
-    #轉換為指定的格式:
-    otherStyleTime = now.strftime("%Y-%m-%d %H:%M:%S")
-    message = '時間：'+otherStyleTime+' 使用者：'+getnowuser()+'閉門！！！'
-    lineNotifyMessage(token, message)
-    return render_template("arduino.html")
-
 
 
 

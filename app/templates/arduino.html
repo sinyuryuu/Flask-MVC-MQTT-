@@ -6,33 +6,22 @@
 {% block main %}
 
 <br/>
-<h1>Arduino 測試</h1>
-<h1>你是 {{nowuser}}</h1>
-<br/>
-<form action="/arduino">
-  <!-- <button type="button" class="btn btn-primary" onclick="location.href='http://188.166.206.43/SpSvKBcungOIKDviW76LsYXL_pqkb_a2/update/V2?value='"  >開始</button> -->
-  <button type="button" class="btn btn-primary" value='http://188.166.206.43/SpSvKBcungOIKDviW76LsYXL_pqkb_a2/update/V2?value='  >開始</button>
-  <button type="button" class="btn btn-primary" onclick="location.href='http://188.166.206.43/SpSvKBcungOIKDviW76LsYXL_pqkb_a2/update/V3?value='"  >停止</button>
+<h1>開關門測試</h1>
+<!-- <h1>你是 {{nowuser}}</h1> 顯示目前使用者-->  
+  <form action="/ledon" method="post">
+    <br/>
+      <h2>目前門的狀態：</h2> <h3 id ="subscribe_messages" class="panel-title">尚未接收到數值</h3>
+      <br/>
+      <button id="doorop" type="submit" class="btn btn-primary btn-lg"  name="dooropen" value="open">開鎖</button>
+      <button id="doorcl" type="submit" class="btn btn-primary btn-lg"  name="doorclose" value="close">關鎖</button>
   </form>
+
   <br/>
+
   <form action="/mqtt">
     <button class="btn btn-primary" id="submit_btn">mqtt 測試</button> 
     <label for="mqttsuzi" class="form-label">{{doorstatus}}</label>
     </form>
-<br/>
-  <form action="/ledon" method="post">
-      <button type="submit" class="btn btn-primary" type="button">mqtt開</button>
-  </form>
-<br/>
-  <form action="/ledoff" method="post">
-    <button type="submit" class="btn btn-primary" type="button">mqtt關</button>
-  </form>
-
-<br/>
-<h1>目前狀態</h1>
-<br/>
-<h3 id ="subscribe_messages" class="panel-title">尚未接收到數值</h3>
-
 
 {% endblock %}
 
@@ -68,6 +57,68 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     })
   });
+
+  
+    doorop = document.getElementById('doorop');
+    doorop.addEventListener('click', () => {
+  
+
+        Swal.fire({
+            title: '開門中...',
+            html: '正在開門',
+            timer: 1500,
+            timerProgressBar: true,
+            didOpen: () => {
+              Swal.showLoading()
+              const b = Swal.getHtmlContainer().querySelector('b')
+              timerInterval = setInterval(() => {
+                b.textContent = Swal.getTimerLeft()
+              }, 100)
+            },
+            willClose: () => {
+              clearInterval(timerInterval)
+            }
+          }).then((result) => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === Swal.DismissReason.timer) {
+              console.log('I was closed by the timer')
+            }
+          })
+
+        
+      });
+  
+
+    doorcl = document.getElementById('doorcl');
+    doorcl.addEventListener('click', () => 
+      
+      {
+
+        Swal.fire({
+            title: '關門中...',
+            html: '正在關門',
+            timer: 1500,
+            timerProgressBar: true,
+            didOpen: () => {
+              Swal.showLoading()
+              const b = Swal.getHtmlContainer().querySelector('b')
+              timerInterval = setInterval(() => {
+                b.textContent = Swal.getTimerLeft()
+              }, 100)
+            },
+            willClose: () => {
+              clearInterval(timerInterval)
+            }
+          }).then((result) => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === Swal.DismissReason.timer) {
+              console.log('I was closed by the timer')
+            }
+          })
+
+
+      });
+    
 
 
 </script>
