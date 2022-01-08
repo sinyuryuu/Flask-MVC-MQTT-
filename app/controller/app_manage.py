@@ -4,12 +4,12 @@
 import json
 import uuid
 import os
-from flask import Flask, render_template ,request, jsonify
+from flask import Flask, render_template ,request
 import requests
 
 #app 導入後才能import (從__int__匯入app)
 from app import app,db,socketio,migrate,mqtt
-from app.controller.login import login_required,getnowuser     #這裡只用到flask_login的登入功能驗證
+from app.controller.login import login_required,getnowuser,current_user,UserMixin, user_loader     #這裡只用到flask_login的登入功能驗證
 from app.controller.mqtt import bmqtt               #這裡只用到mqtt 解析後 bmqtt這個串列
 from app.controller.linenotify import lotify        #這裡只用到lotify這個變數
 
@@ -24,6 +24,7 @@ app.secret_key = 'dd06be55a06c03312b2ab109b5f8f6ab'
 import datetime
 
 app.jinja_env.globals['nowts'] = datetime.datetime.now()   #設定jinja2 時間模板
+
 
 # UTC時間自動更新
 @app.context_processor 
@@ -78,7 +79,10 @@ def mqttz():
 def ledon():        
     mqtt.publish('esp/son', 'on') 
     token = 'ctupVqalWzuKbaw72AWqKcl2tKXftiT5YhGiBR0v0jL'
-    message = getnowuser()+'開門!!!!!'
+    now = datetime.datetime.now() 
+    #轉換為指定的格式:
+    otherStyleTime = now.strftime("%Y-%m-%d %H:%M:%S")
+    message = '時間：'+otherStyleTime+' 使用者：'+getnowuser()+'開門！！！'
     lineNotifyMessage(token, message)
     return render_template("arduino.html")
 
@@ -87,7 +91,10 @@ def ledon():
 def ledoff():        
     mqtt.publish('esp/son', 'soff') 
     token = 'ctupVqalWzuKbaw72AWqKcl2tKXftiT5YhGiBR0v0jL'
-    message = getnowuser()+'閉門！！！'
+    now = datetime.datetime.now() 
+    #轉換為指定的格式:
+    otherStyleTime = now.strftime("%Y-%m-%d %H:%M:%S")
+    message = '時間：'+otherStyleTime+' 使用者：'+getnowuser()+'閉門！！！'
     lineNotifyMessage(token, message)
     return render_template("arduino.html")
 
@@ -161,6 +168,7 @@ def token1():
 #預設get方法
 @app.route("/") #函式的裝飾 (decorator) 以提供為基礎，提供附加功能
 def index():
+    app.jinja_env.globals['nowuser'] = getnowuser()
     db.session.commit()
     return render_template("index.html")
     
@@ -183,7 +191,7 @@ def line():
 def arduino(): 
     
   
-    return render_template("arduino.html",nowuser = getnowuser())
+    return render_template("arduino.html")
 
 
 @app.route('/top')

@@ -147,7 +147,7 @@ def login():
         #return render_template('login.html')
        
        
-        
+        app.jinja_env.globals['nowuser'] = getnowuser() #jinja2 語法 html前端抓後端{{}}也能用?
         return render_template ("index.html",name =user_id)
 
 
