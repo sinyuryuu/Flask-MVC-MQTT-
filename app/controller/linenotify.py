@@ -59,3 +59,5 @@ def send_sticker():
         sticker_package_id=4,
     )
     return jsonify(result=response.get("message")), response.get("status")
+
+

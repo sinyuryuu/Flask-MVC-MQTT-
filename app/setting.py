@@ -22,12 +22,12 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///' + \
 
 #############################  MQTT 設定檔  #####################################
 
-# app.config['SECRET'] = 'my secret key'
-# app.config['MQTT_BROKER_URL'] = '192.168.0.144'
-# app.config['MQTT_BROKER_PORT'] = 1883
-# app.config['MQTT_USERNAME'] = 'bob01'
-# app.config['MQTT_PASSWORD'] = '123456'
-# app.config['MQTT_REFRESH_TIME'] = 1.0  # refresh time in seconds
+""" SECRET = 'my secret key'
+MQTT_BROKER_URL = '192.168.0.144'
+MQTT_BROKER_PORT = 1883
+MQTT_USERNAME = 'bob01'
+MQTT_PASSWORD = '123456'
+MQTT_REFRESH_TIME = 1.0  # refresh time in seconds """
 
 SECRET = 'my secret key'
 TEMPLATES_AUTO_RELOAD = True

@@ -5,10 +5,11 @@ import json
 import uuid
 import os
 from flask import Flask, render_template ,request, jsonify
+import requests
 
 #app 導入後才能import (從__int__匯入app)
 from app import app,db,socketio,migrate,mqtt
-from app.controller.login import login_required     #這裡只用到flask_login的登入功能驗證
+from app.controller.login import login_required,getnowuser     #這裡只用到flask_login的登入功能驗證
 from app.controller.mqtt import bmqtt               #這裡只用到mqtt 解析後 bmqtt這個串列
 from app.controller.linenotify import lotify        #這裡只用到lotify這個變數
 
@@ -16,6 +17,8 @@ from app.controller.linenotify import lotify        #這裡只用到lotify這個
 from app.model.user import user
 from app.model.token import token
 
+app.secret_key = 'dd06be55a06c03312b2ab109b5f8f6ab'
+#secret_key = 'dd06be55a06c03312b2ab109b5f8f6ab'
 ################################# 網頁功能 #############################################
 
 import datetime
@@ -31,6 +34,17 @@ def inject_template_globals():
 
 
 # 前端放入 {{ nowts.strftime('%Y') }}
+
+def lineNotifyMessage(token, msg):
+
+    headers = {
+        "Authorization": "Bearer " + token, 
+        "Content-Type" : "application/x-www-form-urlencoded"
+    }
+
+    payload = {'message': msg }
+    r = requests.post("https://notify-api.line.me/api/notify", headers = headers, params = payload)
+    return r.status_code
 
 
 
@@ -63,13 +77,23 @@ def mqttz():
 @app.route("/ledon", methods=['GET', 'POST'])
 def ledon():        
     mqtt.publish('esp/son', 'on') 
+    token = 'ctupVqalWzuKbaw72AWqKcl2tKXftiT5YhGiBR0v0jL'
+    message = getnowuser()+'開門!!!!!'
+    lineNotifyMessage(token, message)
     return render_template("arduino.html")
 
 
 @app.route("/ledoff", methods=['GET', 'POST'])
 def ledoff():        
     mqtt.publish('esp/son', 'soff') 
+    token = 'ctupVqalWzuKbaw72AWqKcl2tKXftiT5YhGiBR0v0jL'
+    message = getnowuser()+'閉門！！！'
+    lineNotifyMessage(token, message)
     return render_template("arduino.html")
+
+
+
+
 
 
 
@@ -83,7 +107,6 @@ def show():
 
 
 #要求字串   max=
-
 @app.route("/keisan")
 @login_required
 def keisan():  #1+2+3+...max
@@ -108,7 +131,9 @@ def keisan():  #1+2+3+...max
         print("答案",result)
         suzi = result
         print("答案",suzi)
+        
         return render_template("page.html", suzi=suzi)
+        
 
 
 
@@ -156,8 +181,9 @@ def line():
 @app.route("/arduino")
 @login_required
 def arduino(): 
+    
   
-    return render_template("arduino.html")
+    return render_template("arduino.html",nowuser = getnowuser())
 
 
 @app.route('/top')

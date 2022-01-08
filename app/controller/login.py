@@ -22,6 +22,8 @@ allpwd =[]
 
 
 
+
+
 # 取得帳號密碼函式只要有呼叫該函式就會刷新字典
 def getupwd():
     
@@ -108,6 +110,7 @@ def request_loader(request):
     
 
     return user
+
 myname =''
 from flask import request, render_template, url_for, redirect, flash
 @app.route('/login', methods=['GET', 'POST'])
@@ -117,6 +120,7 @@ from flask import request, render_template, url_for, redirect, flash
 def login(): 
     getupwd()                #取得目前最新帳密字典
     users = newus
+    
     #print('1之前',users)
     #print('2之前',newus)
     
@@ -143,7 +147,7 @@ def login():
         #return render_template('login.html')
        
        
-
+        
         return render_template ("index.html",name =user_id)
 
 
@@ -154,5 +158,20 @@ def login():
 def logout():
     user_id = current_user.get_id()
     logout_user()
-    flash(f'{user_id}！歡迎下次再來！')
-    return render_template('login.html') 
+    outuser = user_id
+    if outuser == None:
+        flash(f'請先登錄!')
+    
+        return render_template('login.html')
+    else: 
+    
+        flash(f'{outuser}！歡迎下次再來！')
+    
+        return render_template('login.html') 
+
+def getnowuser():
+    user_id = current_user.get_id()
+    nowuser = user_id
+    print(nowuser)
+
+    return nowuser
