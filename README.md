@@ -14,3 +14,4 @@
 #### pip install Flask-SQLAlchemy
 #### pip install Flask-Migrate
 #### pip install lotify
+#### pip install Flask-Login

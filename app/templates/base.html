@@ -14,13 +14,15 @@
 
         <!--  CSS 樣式表放在這裡 -->
         <style> body {font-family: 'Noto Sans TC', sans-serif;}</style>
+        <link rel="stylesheet" href="{{ url_for('static', filename='/style.css') }}">  
         <!--  CSS 樣式表放在這裡 -->
 
     <body>
       <!-- v5沒有 jumbotron 元件 -->
-      <div class="p-5 mb-4 bg-light rounded-3">
+      
         <!-- 登入後才可見到的導覽列 -->
         {% if current_user.is_authenticated %}  
+        <!-- 第一層  導覽列 -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
               <a class="navbar-brand" href="#">門禁系統</a>
@@ -45,12 +47,12 @@
                       <li><hr class="dropdown-divider"></li>
                     </ul>
                 </ul>
-                  <a class="nav-link">使用者 {{nowuser}}</a>
+                  <a class="navbar-brand">使用者{{nowuser}}</a>
                   <button class="btn btn-outline-success" onclick="window.location.href = '/logout';">登出</button>
               </div>
             </div>
           </nav>
-          <div class="container">
+          
 
           {% endif %}
 
@@ -69,12 +71,35 @@
 
 <main>
 <!-- 可供更改的部分 -->
-{% block main %}{% endblock %}
+
+
+
+   <!-- 第二層 內容 -->
+   <div class="container-fluid">
+    <div class="row content">
+        
+        <!-- 左邊欄位 -->
+        <div class="col-sm-2 sidenav">
+
+        </div>
+        <!-- 中間欄位 -->
+        <div class="col-sm-8 main-content text-left">
+          {% block main %}
+
+
+          {% endblock %}
+
+        </div>
+        <!-- 右邊欄位 -->
+        <div class="col-sm-2 sidenav">
+
+        </div>
+      </div>
+
 </main> 
 
-</div>
-
-<footer class="text-center text-muted">
+<!-- 第三層 頁腳 -->
+<footer class="container-fluid text-center">
 
     <p style="color:black;"><a target="_blank"  style="cursor:text;text-decoration:none;color:black;">Copyright &copy;</a> {{ nowts.strftime('%Y') }} - 門禁系統  All rights reserved.</p>
     </footer>
