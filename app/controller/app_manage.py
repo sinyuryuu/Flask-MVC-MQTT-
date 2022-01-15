@@ -78,19 +78,20 @@ def mqttz():
     
 @app.route("/ledon", methods=['POST'])
 def ledon():        
-    mqtt.publish('esp/son', 'on') 
     token = 'ctupVqalWzuKbaw72AWqKcl2tKXftiT5YhGiBR0v0jL'
     now = datetime.datetime.now() 
     #轉換為指定的格式:
     otherStyleTime = now.strftime("%Y-%m-%d %H:%M:%S")
     
     if 'dooropen' in request.form:
+        mqtt.publish('esp/son', 'on') 
         message = '時間：'+otherStyleTime+' 使用者：'+getnowuser()+'開門！！！'
         lineNotifyMessage(token, message)
         time.sleep(1.5)
         
         
     elif 'doorclose' in request.form:
+        mqtt.publish('esp/son', 'soff') 
         message = '時間：'+otherStyleTime+' 使用者：'+getnowuser()+'閉門！！！'
         lineNotifyMessage(token, message)
         time.sleep(1.5)
